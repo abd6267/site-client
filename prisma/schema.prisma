@@ -1,0 +1,316 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum RoleUtilisateur {
+  ADMIN
+  ENTREPRISE
+}
+
+enum StatutEntreprise {
+  EN_ATTENTE
+  VALIDE
+  REJETE
+  SUSPENDU
+  DESACTIVE
+}
+
+enum TypeAbonnement {
+  BASIQUE
+  PREMIUM
+  VIP
+}
+
+enum DureeAbonnement {
+  TRIMESTRIEL
+  SEMESTRIEL
+  ANNUEL
+}
+
+enum StatutAbonnement {
+  ACTIF
+  EXPIRE
+  ANNULE
+}
+
+enum StatutPaiement {
+  EN_ATTENTE
+  CONFIRME
+  ECHOUE
+}
+
+enum StatutOffre {
+  BROUILLON
+  PUBLIEE
+  DESACTIVEE
+  EXPIREE
+}
+
+enum StatutDemande {
+  NOUVELLE
+  EN_COURS
+  VALIDEE
+  RECRUTEMENT_EN_COURS
+  CLOTUREE
+}
+
+enum StatutMessage {
+  NON_LU
+  LU
+  ARCHIVE
+}
+
+// ==========================================
+// UTILISATEURS (Admin + lien vers Entreprise)
+// ==========================================
+
+model Utilisateur {
+  id            String           @id @default(cuid())
+  email         String           @unique
+  motDePasse    String
+  role          RoleUtilisateur
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  entreprise    Entreprise?
+}
+
+// ==========================================
+// ENTREPRISE
+// ==========================================
+
+model Entreprise {
+  id                String            @id @default(cuid())
+  utilisateur       Utilisateur       @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  utilisateurId     String            @unique
+
+  nomEntreprise     String
+  nomPromoteur      String
+  activites         String
+  situationGeo      String
+  rccm              String
+  ifu               String
+  telephone         String
+  email             String
+
+  statut            StatutEntreprise  @default(EN_ATTENTE)
+
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  abonnements       Abonnement[]
+  paiements         Paiement[]
+  demandes          DemandeRecrutement[]
+  consultations     ConsultationCandidat[]
+}
+
+// ==========================================
+// CANDIDAT (CVTHEQUE)
+// ==========================================
+
+model Candidat {
+  id                String       @id @default(cuid())
+  reference         String       @unique
+
+  nom               String
+  prenom            String
+  photoUrl          String?
+  cvUrl             String?
+
+  posteRecherche    String
+  domaine           String
+  niveauEtude       String
+  experience        String
+  localisation      String
+  disponibilite     String
+  competences       String
+  typeProfil        String?
+
+  confidentiel      Boolean      @default(true)
+
+  actif             Boolean      @default(true)
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  consultations     ConsultationCandidat[]
+}
+
+// ==========================================
+// SUIVI DES CONSULTATIONS CVTHEQUE (quota journalier)
+// ==========================================
+
+model ConsultationCandidat {
+  id             String      @id @default(cuid())
+  entreprise     Entreprise  @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  entrepriseId   String
+  candidat       Candidat    @relation(fields: [candidatId], references: [id], onDelete: Cascade)
+  candidatId     String
+  dateConsultation DateTime  @default(now())
+
+  @@unique([entrepriseId, candidatId, dateConsultation])
+}
+
+// ==========================================
+// ABONNEMENTS
+// ==========================================
+
+model Abonnement {
+  id             String            @id @default(cuid())
+  entreprise     Entreprise        @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  entrepriseId   String
+
+  type           TypeAbonnement
+  duree          DureeAbonnement
+  statut         StatutAbonnement  @default(ACTIF)
+
+  dateDebut      DateTime          @default(now())
+  dateExpiration DateTime
+
+  createdAt      DateTime          @default(now())
+
+  paiements      Paiement[]
+}
+
+// ==========================================
+// GRILLE TARIFAIRE (configurable admin)
+// ==========================================
+
+model TarifAbonnement {
+  id       String           @id @default(cuid())
+  type     TypeAbonnement
+  duree    DureeAbonnement
+  prix     Int
+
+  @@unique([type, duree])
+}
+
+// ==========================================
+// PAIEMENTS
+// ==========================================
+
+model Paiement {
+  id             String          @id @default(cuid())
+  entreprise     Entreprise      @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  entrepriseId   String
+  abonnement     Abonnement?     @relation(fields: [abonnementId], references: [id])
+  abonnementId   String?
+
+  montant        Int
+  modePaiement   String?
+  statut         StatutPaiement  @default(EN_ATTENTE)
+  reference      String          @unique
+
+  createdAt      DateTime        @default(now())
+}
+
+// ==========================================
+// OFFRES D'EMPLOI
+// ==========================================
+
+model OffreEmploi {
+  id                String       @id @default(cuid())
+  intitulePoste     String
+  entrepriseNom     String?
+  afficherNom       Boolean      @default(true)
+
+  localisation      String
+  typeContrat       String
+  niveauEtude       String
+  experience        String
+  salaire           String?
+
+  description       String
+  missions          String
+  profilRecherche   String
+  competences       String
+
+  statut            StatutOffre  @default(BROUILLON)
+
+  datePublication   DateTime     @default(now())
+  dateExpiration    DateTime?
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+// ==========================================
+// DEMANDES DE RECRUTEMENT (fiche de demande)
+// ==========================================
+
+model DemandeRecrutement {
+  id                    String          @id @default(cuid())
+  reference             String          @unique
+
+  entreprise            Entreprise?     @relation(fields: [entrepriseId], references: [id])
+  entrepriseId          String?
+
+  nomEntreprise         String
+  activites             String
+  situationGeo          String
+  rccm                  String
+  ifu                   String
+  telephone             String
+  email                 String
+
+  posteRecherche        String
+  nombrePersonnes       Int
+  profilCandidat        String
+  niveauEtude           String
+  experience            String
+  competences           String
+  grilleSalariale       String
+  horaireService        String
+  typeContrat           String
+  dureeContrat          String
+  datePriseFonction     DateTime
+  observations          String?
+
+  statut                StatutDemande   @default(NOUVELLE)
+  pdfUrl                String?
+
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+}
+
+// ==========================================
+// CONDITIONS DE RECRUTEMENT (administrable)
+// ==========================================
+
+model ConditionsRecrutement {
+  id                     String   @id @default(cuid())
+  fraisOuvertureDossier  String?
+  fraisRecrutement       String?
+  modalitesPaiement      String?
+  conditionsRemplacement String?
+  conditionsParticulieres String?
+  autresInfos            String?
+  updatedAt              DateTime @updatedAt
+}
+
+// ==========================================
+// MESSAGES (formulaire de contact)
+// ==========================================
+
+model MessageContact {
+  id             String         @id @default(cuid())
+  nomPrenom      String
+  nomEntreprise  String?
+  telephone      String
+  email          String
+  objet          String
+  message        String
+
+  statut         StatutMessage  @default(NON_LU)
+
+  createdAt      DateTime       @default(now())
+}
