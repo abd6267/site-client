@@ -15,7 +15,8 @@ export default auth((req) => {
     nextUrl.pathname.startsWith("/dashboard") ||
     nextUrl.pathname.startsWith("/cvtheque") ||
     nextUrl.pathname.startsWith("/profil") ||
-    nextUrl.pathname.startsWith("/abonnement");
+    nextUrl.pathname.startsWith("/abonnement") ||
+    nextUrl.pathname.startsWith("/fiche-demande");
 
   if (estRouteAdmin && role !== "ADMIN") {
     return NextResponse.redirect(new URL("/admin/connexion", nextUrl));

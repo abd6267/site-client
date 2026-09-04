@@ -68,22 +68,22 @@ export default function Accueil() {
         </div>
       </section>
 
-      <section className="bg-[var(--color-nuit)] text-white mt-16">
+      <section className="bg-[#0F1C3F] text-white mt-16">
         <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <p className="font-[var(--font-display)] text-4xl font-extrabold text-[var(--color-corail)]">2015</p>
+            <p className="font-[var(--font-display)] text-4xl font-extrabold" style={{ color: "#FF5A3C" }}>2015</p>
             <p className="text-sm text-white/70 mt-1">Année de création</p>
           </div>
           <div>
-            <p className="font-[var(--font-display)] text-4xl font-extrabold text-[var(--color-corail)]">7</p>
+            <p className="font-[var(--font-display)] text-4xl font-extrabold" style={{ color: "#FF5A3C" }}>7</p>
             <p className="text-sm text-white/70 mt-1">Domaines d&apos;expertise</p>
           </div>
           <div>
-            <p className="font-[var(--font-display)] text-4xl font-extrabold text-[var(--color-corail)]">100%</p>
+            <p className="font-[var(--font-display)] text-4xl font-extrabold" style={{ color: "#FF5A3C" }}>100%</p>
             <p className="text-sm text-white/70 mt-1">Accompagnement local</p>
           </div>
           <div>
-            <p className="font-[var(--font-display)] text-4xl font-extrabold text-[var(--color-corail)]">RH</p>
+            <p className="font-[var(--font-display)] text-4xl font-extrabold" style={{ color: "#FF5A3C" }}>RH</p>
             <p className="text-sm text-white/70 mt-1">Notre cœur de métier</p>
           </div>
         </div>
