@@ -5,31 +5,31 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const liens = [
-  { href: "/qui-sommes-nous", label: "Qui sommes-nous ?" },
-  { href: "/offres-emploi", label: "Nos offres d'emploi" },
+  { href: "/qui-sommes-nous", label: "Qui sommes-nous" },
+  { href: "/offres-emploi", label: "Offres d'emploi" },
   { href: "/fiche-demande", label: "Fiche de demande" },
-  { href: "/cvtheque", label: "BTEC CVTHÈQUE" },
-  { href: "/nous-contacter", label: "Nous contacter" },
+  { href: "/cvtheque", label: "CVTHÈQUE" },
+  { href: "/nous-contacter", label: "Contact" },
 ];
 
 export default function Header() {
   const [ouvert, setOuvert] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--color-fond)]/95 backdrop-blur border-b border-[var(--color-bordure)]">
-      <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-[var(--color-fond)]/90 backdrop-blur-md border-b border-[var(--color-bordure)]">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-[var(--font-display)] text-2xl font-semibold text-[var(--color-bleu-nuit)]">
-            BTEC <span className="text-[var(--color-ambre-fonce)]">BENIN</span>
+          <span className="font-[var(--font-display)] text-2xl font-extrabold tracking-tight text-[var(--color-nuit)]">
+            BTEC<span className="text-[var(--color-corail)]">.</span>
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-9">
           {liens.map((lien) => (
             <Link
               key={lien.href}
               href={lien.href}
-              className="text-sm text-[var(--color-texte-doux)] hover:text-[var(--color-bleu-nuit)] transition-colors"
+              className="text-sm font-medium text-[var(--color-texte-doux)] hover:text-[var(--color-nuit)] transition-colors"
             >
               {lien.label}
             </Link>
@@ -39,21 +39,21 @@ export default function Header() {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/connexion"
-            className="text-sm text-[var(--color-bleu-nuit)] font-medium px-4 py-2"
+            className="text-sm font-medium text-[var(--color-nuit)] px-4 py-2"
           >
             Connexion
           </Link>
           <Link
             href="/inscription"
-            className="text-sm bg-[var(--color-bleu-nuit)] text-white px-5 py-2.5 rounded-md font-medium hover:bg-[var(--color-bleu-fonce)] transition-colors"
+            className="text-sm font-semibold bg-[var(--color-corail)] text-white px-5 py-2.5 rounded-full hover:bg-[var(--color-corail-fonce)] transition-colors"
           >
-            Compte Entreprise
+            Espace Entreprise
           </Link>
         </div>
 
         <button
           onClick={() => setOuvert(!ouvert)}
-          className="lg:hidden text-[var(--color-bleu-nuit)]"
+          className="lg:hidden text-[var(--color-nuit)]"
           aria-label="Ouvrir le menu"
         >
           {ouvert ? <X size={26} /> : <Menu size={26} />}
@@ -67,20 +67,20 @@ export default function Header() {
               key={lien.href}
               href={lien.href}
               onClick={() => setOuvert(false)}
-              className="text-[var(--color-texte-doux)]"
+              className="text-[var(--color-texte-doux)] font-medium"
             >
               {lien.label}
             </Link>
           ))}
           <div className="flex flex-col gap-3 pt-2">
-            <Link href="/connexion" className="text-[var(--color-bleu-nuit)] font-medium">
+            <Link href="/connexion" className="text-[var(--color-nuit)] font-medium">
               Connexion
             </Link>
             <Link
               href="/inscription"
-              className="bg-[var(--color-bleu-nuit)] text-white px-5 py-2.5 rounded-md text-center font-medium"
+              className="bg-[var(--color-corail)] text-white px-5 py-2.5 rounded-full text-center font-semibold"
             >
-              Compte Entreprise
+              Espace Entreprise
             </Link>
           </div>
         </nav>
