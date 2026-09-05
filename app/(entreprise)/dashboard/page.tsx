@@ -11,6 +11,7 @@ import {
   LogOut,
   AlertCircle,
   Clock,
+  FileText,
 } from "lucide-react";
 
 type DashboardData = {
@@ -172,18 +173,33 @@ export default function Dashboard() {
             )}
           </div>
 
-          <Link
-            href="/profil"
-            className="p-6 bg-white border border-[var(--color-bordure)] rounded-xl hover:border-[var(--color-ambre)] transition-colors h-fit"
-          >
-            <User size={18} className="text-[var(--color-ambre-fonce)]" />
-            <h2 className="mt-3 font-medium text-[var(--color-bleu-nuit)]">
-              Profil entreprise
-            </h2>
-            <p className="mt-2 text-sm text-[var(--color-texte-doux)]">
-              Gérer les informations de votre entreprise.
-            </p>
-          </Link>
+          <div className="space-y-4">
+            <Link
+              href="/profil"
+              className="block p-6 bg-white border border-[var(--color-bordure)] rounded-xl hover:border-[var(--color-ambre)] transition-colors"
+            >
+              <User size={18} className="text-[var(--color-ambre-fonce)]" />
+              <h2 className="mt-3 font-medium text-[var(--color-bleu-nuit)]">
+                Profil entreprise
+              </h2>
+              <p className="mt-2 text-sm text-[var(--color-texte-doux)]">
+                Gérer les informations de votre entreprise.
+              </p>
+            </Link>
+
+            <Link
+              href="/fiche-demande"
+              className="block p-6 bg-white border border-[var(--color-bordure)] rounded-xl hover:border-[var(--color-ambre)] transition-colors"
+            >
+              <FileText size={18} className="text-[var(--color-ambre-fonce)]" />
+              <h2 className="mt-3 font-medium text-[var(--color-bleu-nuit)]">
+                Fiche de demande
+              </h2>
+              <p className="mt-2 text-sm text-[var(--color-texte-doux)]">
+                Soumettre une demande de recrutement au Cabinet.
+              </p>
+            </Link>
+          </div>
         </div>
       )}
     </section>

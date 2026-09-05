@@ -7,7 +7,6 @@ import { Menu, X } from "lucide-react";
 const liens = [
   { href: "/qui-sommes-nous", label: "Qui sommes-nous" },
   { href: "/offres-emploi", label: "Offres d'emploi" },
-  { href: "/fiche-demande", label: "Fiche de demande" },
   { href: "/cvtheque", label: "CVTHÈQUE" },
   { href: "/nous-contacter", label: "Contact" },
 ];
